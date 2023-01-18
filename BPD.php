@@ -124,9 +124,7 @@ class BPDParser
         $header = substr($p, 0, $header_size);
         preg_match_all('%Set-Cookie: XSRF-TOKEN=(.*?);%',$header,$d);
         preg_match_all('%set-cookie: XSRF-TOKEN=(.*?);%',$header,$e);
-        // var_dump($p);
         $parse = explode( '<div class="pull-left image" id="prof-pict">', $p );
-        // var_dump($parse);
         if ( empty( $parse[1] ) ){
         return false;
         } else{
@@ -183,7 +181,7 @@ class BPDParser
 
         preg_match('#<td>(.*?)</td>#', $cektrx, $cektrx);
         if($cektrx[1] == 'Tidak ada Data'){
-        echo 'Tidak ada Data';exit;
+        return 'Tidak ada Data';
         } else{
 
 
