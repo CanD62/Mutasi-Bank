@@ -41,9 +41,13 @@ class IbParser
 
         $this->instantiate( $bank );
         $token = $this->bank->login( $username, $password );
+        if($token == false){
+        return 'gagal login';
+        } else{
         $transactions = $this->bank->getTransactions($tgl1, $tgl2);
         $this->bank->logout($token);
         return $transactions;
+        }
 
     }
 
@@ -120,9 +124,15 @@ class BPDParser
         $header = substr($p, 0, $header_size);
         preg_match_all('%Set-Cookie: XSRF-TOKEN=(.*?);%',$header,$d);
         preg_match_all('%set-cookie: XSRF-TOKEN=(.*?);%',$header,$e);
+        // var_dump($p);
+        $parse = explode( '<div class="pull-left image" id="prof-pict">', $p );
+        // var_dump($parse);
+        if ( empty( $parse[1] ) ){
+        return false;
+        } else{
         $token = isset($d[1][1]) ? $d[1][1] : $e[1][1];
         return $token;
-       
+    }
     }
 
 
@@ -154,7 +164,6 @@ class BPDParser
         $req = $this->curlexec();
         preg_match('/name="_csrf" value="(.*?)"/', $req, $csrf);
         $csrf = $csrf[1];
-        // $tgl = urlencode('01/01/2023 - 18/01/2023');
         $tgl = urlencode($tgl1.' - '.$tgl2);
         $params ='_csrf='.$csrf.'&flagHistory=2&dateFromTo='.$tgl;
         curl_setopt( $this->ch, CURLOPT_URL, 'https://ibanking.bankjateng.co.id/account_history_' );
